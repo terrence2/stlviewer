@@ -1,0 +1,12 @@
+[package]
+name = "stlviewer"
+version = "0.1.0"
+authors = ["Terrence Cole <terrence.d.cole@gmail.com>"]
+
+[dependencies]
+clap = "^2.19"
+error-chain = "^0.7"
+kiss3d = "^0.7"
+nalgebra = "^0.9"
+nom = "^2.0"
+notify = "^3.0"
