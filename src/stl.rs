@@ -1,4 +1,4 @@
-use nalgebra::Point3;
+use nalgebra::{FloatPoint, Origin, Point3};
 use nom::{le_u16, le_u32, le_f32, space, multispace};
 use std::f32;
 use std::fs::File;
@@ -98,6 +98,13 @@ named!(parse_binary_stl <&[u8], Mesh>, do_parse!(
     (Mesh { name: "binary".to_owned(), tris: tris })
 ));
 
+fn max4(a: f32, b: f32, c: f32, d: f32) -> f32 {
+    let mut m = a;
+    if b > m { m = b; }
+    else if c > m { m = c; }
+    else if d > m { m = d; }
+    return m;
+}
 
 #[derive(Debug)]
 pub struct Mesh {
@@ -117,5 +124,16 @@ impl Mesh {
 
         let (_, mesh) = parse_binary_stl(&s).unwrap();
         return Ok(mesh);
+    }
+
+    pub fn radius(&self) -> f32 {
+        let mut r = 1.0f32;
+        for tri in self.tris.iter() {
+            r = max4(r,
+                     tri.verts[0].distance(&Point3::origin()),
+                     tri.verts[1].distance(&Point3::origin()),
+                     tri.verts[2].distance(&Point3::origin()));
+        }
+        return r;
     }
 }
